@@ -61,7 +61,7 @@ class DropdownButton extends Button {
 	super(props);
 
 	this.state = {
-	    showDropdown: false
+	    showDropdown: true
 	}
 
 	if (props.dropdown_style) {
@@ -83,6 +83,10 @@ class DropdownButton extends Button {
     // hoverLeave () {
     // 	this.setState({isHovered: false});
     // }
+
+    listFunc () {
+	return;
+    }
 
     toggleShow () {
 	this.setState({showDropdown: !this.state.showDropdown});
@@ -122,13 +126,23 @@ class DropdownButton extends Button {
 }
 
 function featuresList () {
-    let style = {display:'flex', alignItems:'center', columnGap: '10px', height:'30px'};
+    const icon_style = {gridColumnStart:1, alignSelf:'center', justifySelf:'center'};
+    const text_style = {gridColumnStart:3, alignSelf:'Center', justifySelf:'Start'};
+    const div_style  = {display:'grid', gridTemplateColumns:'1fr 1fr 5fr', alignSelf:'center'}
     return (
-	<div style={{display:'flex', flexDirection:'column'}}>
-	    <div style={style}><TodoIcon/><p>Todo List</p></div>
-	    <div style={style}><CalendarIcon/><p>Calendar</p></div>
-	    <div style={style}><RemindersIcon/><p>Reminders</p></div>
-	    <div style={style}><PlanningIcon/><p>Plannning</p></div>
+	<div style={{display:'grid', gridTemplateRows:'repeat(4, 30px)'}}>
+	    <div style={{...div_style, gridRowStart:'1'}}>
+		<TodoIcon style={icon_style}/><p style={text_style}>Todo List</p>
+	    </div>
+	    <div style={{...div_style, gridRowStart:'2'}}>
+		<CalendarIcon style={icon_style}/><p style={text_style}>Calendar</p>
+	    </div>
+	    <div style={{...div_style, gridRowStart:'3'}}>
+		<RemindersIcon style={icon_style}/><p style={text_style}>Reminders</p>
+	    </div>
+	    <div style={{...div_style, gridRowStart:'4'}}>
+		<PlanningIcon style={icon_style}/><p style={text_style}>Planning</p>
+	    </div>
 	</div>
     );
 }
