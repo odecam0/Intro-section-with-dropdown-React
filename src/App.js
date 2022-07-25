@@ -147,6 +147,23 @@ function featuresList () {
     );
 }
 
+function companyList () {
+    const div_style = {
+	display:'grid',
+	gridTemplateRows:'repeat(3, 30px)',
+	alignItems:'center',
+	justifyItems:'start'
+    };
+
+    return (
+	<div style={div_style}>
+	    <p style={{gridRowStart:'1'}}>History</p>
+	    <p style={{gridRowStart:'2'}}>Our Team</p>
+	    <p style={{gridRowStart:'3'}}>Blog</p>
+	</div>
+    );
+}
+
 class NavigationTab extends React.Component {
 
     styles = {
@@ -163,8 +180,8 @@ class NavigationTab extends React.Component {
 	return (
 	    <div style={this.styles.navigation_bar}>
 		<h1>snap</h1>
-		<DropdownButton text="Features" listFunc={featuresList}/>
-		<DropdownButton text="Company"/>
+		<DropdownButton text="Features" listFunc={featuresList} dropdown_style={{transform:'translateX(-60px)'}}/>
+		<DropdownButton text="Company" listFunc={companyList}/>
 		<Button text="Careers" unactive={true}/>
 		<Button text="About"/> 
 
