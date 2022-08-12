@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 
 import Intro_img_desk from './images/image-hero-desktop.png';
 import './App.css';
@@ -13,14 +14,19 @@ import {ReactComponent as PlanningIcon} from './images/icon-planning.svg';
 import {ReactComponent as RemindersIcon} from './images/icon-reminders.svg';
 import {ReactComponent as TodoIcon} from './images/icon-todo.svg';
 
+import WebFont from 'webfontloader';
+
+WebFont.load({
+    google: {
+	families: ['Epilogue']
+    }
+});
+
+
+
 class Button extends React.Component {
     constructor (props) {
 	super(props);
-	let border = props.border ? '2px' : '0px';
-	let color = props.unactive ? 'grey' : 'black';
-
-	Object.assign(this.styles.buttom, {borderStyle: 'solid', borderWidth:border});
-	Object.assign(this.styles.text, {color: color});
 
 	if (props.clickHandler) {
 	    this.clickHandler = props.clickHandler.bind(this);
@@ -32,189 +38,234 @@ class Button extends React.Component {
     clickHandler () {
 	return
     }
-
-    styles = {
-	buttom: {
-	    borderRadius: "20px",
-	    marginTop: 'auto',
-	    marginBottom: 'auto',
-	    paddingLeft: '20px',
-	    paddingRight: '20px',
-	    display: 'flex'
-	},
-
-	text: {
-	}
-    }
     
     render () {
 	return (
-	    <div style={this.styles.buttom} onClick={this.clickHandler}>
-		<p style={this.styles.text}>{this.props.text}</p>
+	    <div className={this.props.className} onClick={this.clickHandler}>
+		{this.props.text}
 	    </div>
 	);
     }
 }
 
+const StyledButton = styled(Button)`
+    border-radius: 20px;
+    margin-top: auto;
+    margin-bottom: auto;
+    padding-left: 20px;
+    padding-right: 20px;
+    border: ${props => props.border ? '2px' : '0px'};
+    color: ${props => props.unactive ? 'grey' : 'black'};
+    background: white;
+`;
+
+
+
+function Arrow (props) {
+    if(props.up){
+	return(<ArrowUp className={props.className}/>);
+    } else if (props.down) {
+	return(<ArrowDown className={props.className} />);
+    }
+}
+
+const StyledArrow = styled(Arrow)`
+    align-self: center;
+    margin-left: 10px;
+`;
+
 class DropdownButton extends Button {
     constructor (props) {
 	super(props);
-
 	this.state = {
-	    showDropdown: true
+	    showDropdown: false
 	}
 
-	if (props.dropdown_style) {
-	    Object.assign(this.dropdown_style, props.dropdown_style);
-	}
-
-	if (props.listFunc) {
-	    this.listFunc = props.listFunc;
-	}
+	if(props.DDList){
+	    this.DDList = props.DDList;
+	} else {
+	    this.DDList = 'div';
+	};
 
 	this.toggleShow = this.toggleShow.bind(this);
-	this.dropdownList = this.dropdownList.bind(this);
-    }
-
-    // hoverEnter () {
-    // 	this.setState({isHovered: true});
-    // }
-
-    // hoverLeave () {
-    // 	this.setState({isHovered: false});
-    // }
-
-    listFunc () {
-	return;
     }
 
     toggleShow () {
 	this.setState({showDropdown: !this.state.showDropdown});
     }
 
-    dropdown_style = {
-	// height: '100px',
-	// width: '100px',
-	position: 'absolute',
-	boxShadow: '0 0 50px lightgrey',
-	top: '100px',
-	borderRadius: '20px',
-	padding: '20px',
-    }
-
-    arrow_style = {
-	alignSelf: 'center',
-	marginLeft: '10px'
-    }
-
-    dropdownList () {
-	return (<div style={this.dropdown_style}>
-		    {this.listFunc()}
-		</div>);
-    }
-
     render () {
 	return (
-	    <div style={this.styles.buttom}
-		 onClick={this.toggleShow}>
-		<p style={this.styles.text}>{this.props.text}</p>
-		{this.state.showDropdown ? <ArrowUp style={this.arrow_style}/> : <ArrowDown style={this.arrow_style}/>}
-		{this.state.showDropdown && this.dropdownList()}
+	    <div className={this.props.className} onClick={this.toggleShow}>
+		{this.props.text}
+		{this.state.showDropdown ?
+		 <StyledArrow up/> :
+		 <StyledArrow down/>}
+		{this.state.showDropdown && <this.DDList/>}
 	    </div>
 	);
     }
 }
 
-function featuresList () {
-    const icon_style = {gridColumnStart:1, alignSelf:'center', justifySelf:'center'};
-    const text_style = {gridColumnStart:3, alignSelf:'Center', justifySelf:'Start'};
-    const div_style  = {display:'grid', gridTemplateColumns:'1fr 1fr 5fr', alignSelf:'center'}
+const StyledDropdownButton = styled(DropdownButton)`
+    display: flex;
+    align-items: center;
+`;
+
+
+
+function featuresList (props) {
     return (
-	<div style={{display:'grid', gridTemplateRows:'repeat(4, 30px)'}}>
-	    <div style={{...div_style, gridRowStart:'1'}}>
-		<TodoIcon style={icon_style}/><p style={text_style}>Todo List</p>
+	<div className={props.className}>
+	    <div className='row' number={1}>
+		<TodoIcon className='icon'/><p>Todo List</p>
 	    </div>
-	    <div style={{...div_style, gridRowStart:'2'}}>
-		<CalendarIcon style={icon_style}/><p style={text_style}>Calendar</p>
+	    <div className='row' number={2}>
+		<CalendarIcon className='icon'/><p>Calendar</p>
 	    </div>
-	    <div style={{...div_style, gridRowStart:'3'}}>
-		<RemindersIcon style={icon_style}/><p style={text_style}>Reminders</p>
+	    <div className='row' number={3}>
+		<RemindersIcon className='icon'/><p>Reminders</p>
 	    </div>
-	    <div style={{...div_style, gridRowStart:'4'}}>
-		<PlanningIcon style={icon_style}/><p style={text_style}>Planning</p>
+	    <div className='row' number={4}>
+		<PlanningIcon className='icon'/><p>Planning</p>
 	    </div>
 	</div>
     );
 }
 
-function companyList () {
-    const div_style = {
-	display:'grid',
-	gridTemplateRows:'repeat(3, 30px)',
-	alignItems:'center',
-	justifyItems:'start'
-    };
+const StyledFeaturesList = styled(featuresList)`
+    display: grid;
+    grid-template-rows: repeat(4, 30px);
+    transform: translateX(-80px);
+    position: absolute;
+    box-shadow: 0 0 50px lightgrey;
+    top: 100px;
+    border-radius: 20px;
+    padding: 20px;
+    background: white;
 
+    .row {
+        display: grid;
+        grid-template-columns: 1fr 1fr 5fr;
+        align-self: center;
+        grid-row-start: ${props => props.number}
+    }
+
+    .icon, p {
+        align-self: center;
+    }
+
+    .icon {
+        grid-column-start: 1;
+        justify-self: center;
+    }
+
+    p {
+        grid-column-start: 3;
+        justify-self: start;
+    }
+`
+
+function companyList (props) {
     return (
-	<div style={div_style}>
-	    <p style={{gridRowStart:'1'}}>History</p>
-	    <p style={{gridRowStart:'2'}}>Our Team</p>
-	    <p style={{gridRowStart:'3'}}>Blog</p>
+	<div className={props.className}>
+	    <p n='1'>History</p>
+	    <p n='2'>Our Team</p>
+	    <p n='3'>Blog</p>
 	</div>
     );
 }
 
-class NavigationTab extends React.Component {
+const StyledCompanyList = styled(companyList)`
+    display: grid;
+    grid-template-rows: repeat(3, 30px);
+    align-items: center;
+    justify-items: start;
+    position: absolute;
+    box-shadow: 0 0 50px lightgrey;
+    top: 100px;
+    border-radius: 20px;
+    padding: 20px;
+    background: white;
 
-    styles = {
-	navigation_bar:{
-	    display: 'flex',
-	    justifyContent: 'space-between',
-	    gap: '20px',
-	    padding: '20px',
-	    margin: '0'
-	},
+    p {
+        grid-row-start: ${props => props.n};
     }
+`;
 
-    render () {
-	return (
-	    <div style={this.styles.navigation_bar}>
-		<h1>snap</h1>
-		<DropdownButton text="Features" listFunc={featuresList} dropdown_style={{transform:'translateX(-60px)'}}/>
-		<DropdownButton text="Company" listFunc={companyList}/>
-		<Button text="Careers" unactive={true}/>
-		<Button text="About"/> 
+
 
-		<div style={{flexGrow:1}}/>
+function NavigationTab (props) {
+    return (
+	<div className={props.className}>
+	    <h1>snap</h1>
+	    <StyledDropdownButton text="Features" DDList={StyledFeaturesList}/>
+	    <StyledDropdownButton text="Company" DDList={StyledCompanyList}/>
+	    <StyledButton text="Careers" unactive/>
+	    <StyledButton text="About"/> 
 
-		<Button text="Login"/> 
-		<Button text="Register" border={true}/> 
-	    </div>
-	);
-    }
+	    <div style={{flexGrow:1}}/>
+
+	    <StyledButton text="Login"/> 
+	    <StyledButton text="Register" border/> 
+	</div>
+    );
 }
+
+const StyledNavigationTab = styled(NavigationTab)`
+    display: flex;
+    justify-contenct: space-between;
+    gap: 20px;
+    padding: 20px;
+    align-items: center;
+`;
 
 class IntroPage extends React.Component {
     styles = {
 	outer_div: {
-	    padding: '20%'
+	    padding: '60px',
+	    display:'grid',
+	    gridTemplateColumns:'repeat(6, 1fr)',
+	    gridTemplateRows:'repeat(5, 1fr)',
+	    height:'100%'
 	},
+
+	image: {
+	    width:'100%',
+	    height:'100%',
+	    gridColumnStart:'5',
+	    gridColumnEnd:'7',
+	    gridRowStart:'1',
+	    gridRowEnd:'6',
+	    objectFit:'cover',
+	},
+
+	info: {
+	    gridColumnStart:'1',
+	    gridColumnEnd:'4'
+	}
     }
     
     render () {
 	return (
 	    <div style={this.styles.outer_div}>
-		<div/>
-		<img src={Intro_img_desk} alt='Person standing up typing on notebook'/>
+		<div style={this.styles.info}>
+		    <p>Algo escrito</p>
+		</div>
+		<img src={Intro_img_desk}
+		     style={this.styles.image}
+		     alt='Person standing up typing on notebook'/>
 	    </div>
 	);
     }
 }
 
+
+
 function App() {
   return (
     <div className="App">
-	<NavigationTab/>
+	<StyledNavigationTab/>
 	<IntroPage/>
     </div>
   );
